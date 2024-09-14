@@ -8,10 +8,20 @@ namespace ScheduleBot.Controllers
     [ApiController]
     public class BotController : ControllerBase
     {
-        [HttpPost]
-        public void Post(Telegram.Bot.Types.Update update) //Сюда будут приходить апдейты
+        private readonly IConfiguration appConfiguration;
+        private TelegramBotClient bot;
+
+        public BotController(IConfiguration configuration)
         {
-            Console.WriteLine(update?.Message?.Text);
+            this.appConfiguration = configuration;
+            bot = Bot.GetBot(configuration["Token"]);
+        }
+
+        [HttpPost]
+        public async void Post(Telegram.Bot.Types.Update update) //Сюда будут приходить апдейты
+        {
+            long chatId = update.Message.Chat.Id; //получаем айди чата, куда нам сказать привет
+            await bot.SendTextMessageAsync(chatId, "Привет!");
         }
         [HttpGet]
         public string Get() 
