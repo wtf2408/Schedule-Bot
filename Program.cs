@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ScheduleBotContext>(o => o.UseNpgsql(connectionStr
 var app = builder.Build();
 app.MapControllers();
 
-string webhookHandler = "https://e5eb-95-25-141-238.ngrok-free.app";
+string webhookHandler = "https://b588-95-25-141-238.ngrok-free.app";
 
 string? token = app.Configuration["Token"];
 
