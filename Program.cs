@@ -1,16 +1,20 @@
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using ScheduleBot;
 
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddControllersWithViews().AddNewtonsoftJson();
 
+string connectionString = builder.Configuration.GetConnectionString("ScheduleBotDB");
+builder.Services.AddDbContext<ScheduleBotContext>(o => o.UseNpgsql(connectionString));
 
 
 var app = builder.Build();
 app.MapControllers();
 
-string webhookHandler = "https://de6e-95-25-141-238.ngrok-free.app";
+string webhookHandler = "https://e5eb-95-25-141-238.ngrok-free.app";
 
 string? token = app.Configuration["Token"];
 
