@@ -13,5 +13,5 @@ public partial class ScheduleBotContext : DbContext
         
     }
     public DbSet<Direction> Directions { get; set; }
-    public DbSet<Schedule> Schedule { get; set; }
+    public DbSet<Entry> Schedule { get; set; }
 }

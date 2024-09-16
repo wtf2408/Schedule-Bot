@@ -1,19 +1,40 @@
 using System;
 using Telegram.Bot;
+using ScheduleBot.BotCommands;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
+using ScheduleBot.CallbackHandlers;
 
 namespace ScheduleBot;
 
 public class Bot
 {
-    private static TelegramBotClient client { get; set; }
+    private static Bot bot { get; set; }
+    public List<ICommand> Commands;
+    public CallbackHandler CallbackHandler { get; }
+    private TelegramBotClient client;
 
-    public static TelegramBotClient GetBot(string token)
+    private Bot(string token)
     {
-        if (client != null)
-        {
-            return client;
-        }
         client = new TelegramBotClient(token);
-        return client;
+
+        Commands = new List<ICommand>
+        {
+            new StartCommand(),
+            new DirectionsCommand(),
+            new LessonsCommand()
+        };
+        this.CallbackHandler = new CallbackHandler(client);
+        foreach (var command in Commands) command.botClient = client;
+    }
+
+    public static Bot GetBot(string token)
+    {
+        if (bot != null)
+        {
+            return bot;
+        }
+        bot = new Bot(token);
+        return bot;
     }
 }

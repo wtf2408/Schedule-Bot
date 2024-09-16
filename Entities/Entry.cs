@@ -4,7 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ScheduleBot.Entities;
 
-public class Schedule
+[Table("schedule")]
+public class Entry
 {
     [Key]
     public int Id { get; set; }
@@ -13,7 +14,7 @@ public class Schedule
     public DayOfWeek Day { get; set; }
 
     [Column("time")]
-    public DateTime Time { get; set; }
+    public TimeOnly Time { get; set; }
 
     [Column("directionId")]
     public int DirectionId { get; set; }

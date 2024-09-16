@@ -13,70 +13,32 @@ namespace ScheduleBot.Controllers
     public class BotController : ControllerBase
     {
         private readonly IConfiguration appConfiguration;
-        private TelegramBotClient bot;
         private ScheduleBotContext scheduleContext;
+        private Bot bot;
 
         public BotController(IConfiguration configuration, ScheduleBotContext context)
         {
-            this.appConfiguration = configuration;
-            bot = Bot.GetBot(configuration["Token"]);
+            appConfiguration = configuration;
             scheduleContext = context;
+
+            bot = Bot.GetBot(configuration["Token"]);
         }
 
         [HttpPost]
-        public async void Post(Telegram.Bot.Types.Update update) //Сюда будут приходить апдейты
+        public async void Post(Update update) //Сюда будут приходить апдейты
         {
-            string response = string.Empty;
-
             switch (update.Type)
             {
                 case UpdateType.CallbackQuery:
-                    await bot.AnswerCallbackQueryAsync(update.CallbackQuery.Id, "Ответ на колбек");
-                    long chat_id = update.CallbackQuery.Message.Chat.Id;
-                    var message_id = update.CallbackQuery.Message.MessageId;
-                    await bot.DeleteMessageAsync(chat_id, message_id);
-                    await bot.SendTextMessageAsync(chat_id, "ответ на колбек заебал уже давай работай");
+                    bot.CallbackHandler.Handle(update.CallbackQuery, scheduleContext);
                     break;
+
+                
                 case UpdateType.Message:
-                    long chatId = update.Message.Chat.Id; //получаем айди чата, куда нам сказать привет
-                    switch (update.Message.Text)
+                    foreach (var command in bot.Commands)
                     {
-                        case "/start":
-                            // Тут создаем нашу клавиатуру
-                            var replyKeyboard = new ReplyKeyboardMarkup(
-                                new List<KeyboardButton[]>()
-                                {
-                                    new KeyboardButton[]
-                                    {
-                                        new KeyboardButton("/start"),
-                                        new KeyboardButton("/directions"),
-                                        new KeyboardButton("/lessons"),
-                                    }
-                                })
-                            {
-                                ResizeKeyboard = true
-                            };
-
-                            await bot.SendTextMessageAsync(chatId, text: "Выбери команду",
-                                replyMarkup: replyKeyboard); // передаем клавиатуру в параметр replyMarkup
-                            return;
-                            
-                        case "/directions":
-                            foreach (var d in scheduleContext.Directions) response += $"{d.Name}\n";
-                            await bot.SendTextMessageAsync(chatId, $"Список направлений:\n{response}");
-                            break;
-
-                        case "/lessons":
-                            var inlineKeyboard = new InlineKeyboardMarkup(
-                                new List<InlineKeyboardButton>
-                                {
-                                    new InlineKeyboardButton("Пн") {CallbackData = "/mn"},
-                                    new InlineKeyboardButton("Вт") {CallbackData = "/tu"},
-                                }
-                            );
-                            await bot.SendTextMessageAsync(chatId, text: "Выбирете день:",
-                                replyMarkup: inlineKeyboard);
-                            break;
+                        if (command.Name == update.Message.Text)
+                            command.Execute(update, scheduleContext);
                     }
                     break;
             }
@@ -86,8 +48,6 @@ namespace ScheduleBot.Controllers
         [HttpGet]
         public string Get() 
         {
-            //Здесь мы пишем, что будет видно если зайти на адрес,
-            //указаную в ngrok и launchSettings
             return "Telegram bot was started";
         }
 

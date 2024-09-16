@@ -14,4 +14,5 @@ public class Direction
 
     [Column("name")]
     public string Name { get; set; } = null!;
+    public List<Entry> Entries { get; set; }
 }
