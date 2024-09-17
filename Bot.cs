@@ -12,7 +12,7 @@ public class Bot
     private static Bot bot { get; set; }
     public List<ICommand> Commands;
     public CallbackHandler CallbackHandler { get; }
-    private TelegramBotClient client;
+    public TelegramBotClient client;
 
     private Bot(string token)
     {
@@ -21,7 +21,6 @@ public class Bot
         Commands = new List<ICommand>
         {
             new StartCommand(),
-            new DirectionsCommand(),
             new LessonsCommand()
         };
         this.CallbackHandler = new CallbackHandler(client);

@@ -7,18 +7,13 @@ namespace ScheduleBot.Entities;
 [Table("schedule")]
 public class Entry
 {
-    [Key]
-    public int Id { get; set; }
+    [Key] [Column("id")] public int Id { get; set; }
 
-    [Column("day")]
-    public DayOfWeek Day { get; set; }
+    [Column("day")] public DayOfWeek Day { get; set; }
 
-    [Column("time")]
-    public TimeOnly Time { get; set; }
+    [Column("time")] public TimeOnly StartTime { get; set; }
+    [Column("type")] public string LessonType { get; set; }
 
-    [Column("directionId")]
-    public int DirectionId { get; set; }
-
-    [ForeignKey("DirectionId")]
-    public Direction? Direction { get; set; }
+    [Column("subjectId")] public int SubjectId { get; set; }
+    [ForeignKey("SubjectId")] public Subject Subject { get; set; } = null!;
 }

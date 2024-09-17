@@ -27,6 +27,7 @@ namespace ScheduleBot.Controllers
         [HttpPost]
         public async void Post(Update update) //Сюда будут приходить апдейты
         {
+            bool flag = true;
             switch (update.Type)
             {
                 case UpdateType.CallbackQuery:
@@ -37,9 +38,12 @@ namespace ScheduleBot.Controllers
                 case UpdateType.Message:
                     foreach (var command in bot.Commands)
                     {
-                        if (command.Name == update.Message.Text)
+                        if (command.Name == update.Message.Text) {
                             command.Execute(update, scheduleContext);
+                            flag = false;
+                        }
                     }
+                    if (flag) await bot.client.SendTextMessageAsync(update.Message.Chat.Id, "Я не умею на такое отвечать(");
                     break;
             }
 

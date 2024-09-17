@@ -8,10 +8,7 @@ namespace ScheduleBot;
 
 public partial class ScheduleBotContext : DbContext
 {
-    public ScheduleBotContext(DbContextOptions options) : base (options)
-    {
-        
-    }
-    public DbSet<Direction> Directions { get; set; }
+    public ScheduleBotContext(DbContextOptions options) : base (options) {}
+    public DbSet<Subject> Lessons { get; set; }
     public DbSet<Entry> Schedule { get; set; }
 }

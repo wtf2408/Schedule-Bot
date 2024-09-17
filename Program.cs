@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ScheduleBotContext>(o => o.UseNpgsql(connectionStr
 var app = builder.Build();
 app.MapControllers();
 
-string webhookHandler = "https://c283-95-25-141-238.ngrok-free.app";
+string webhookHandler = "https://8908-95-25-141-238.ngrok-free.app";
 
 string? token = app.Configuration["Token"];
 
@@ -25,6 +25,7 @@ using HttpClient httpClient = new();
 var response = await httpClient.GetAsync(regWebhook);
 var deserializeResponse = await response.Content.ReadAsStringAsync();
 System.Console.WriteLine(deserializeResponse);
+
 if (response.IsSuccessStatusCode)
 {
     app.Run();

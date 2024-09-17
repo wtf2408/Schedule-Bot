@@ -6,8 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ScheduleBot.Entities;
 
-[Table("directions")]
-public class Direction
+[Table("subjects")]
+public class Subject
 {
     [Key] [Column("id")]
     public int Id { get; set; }
